@@ -1088,7 +1088,10 @@ trait Implicits extends splain.SplainData {
               // We don't want errors that occur while checking the implicit info
               // to influence the check of further infos, but we should retain divergent implicit errors
               // (except for the one we already squirreled away)
+
+              // TODO: context.reporter.error is cleaned at this point, do not let this happen!
               context.reporter.retainDivergentErrorsExcept(divergentError.getOrElse(null))
+
             }
             search
           }
@@ -1218,6 +1221,8 @@ trait Implicits extends splain.SplainData {
           }
           if (typedFirstPending.isFailure)
             undoLog.undoTo(mark) // Don't accumulate constraints from typechecking or type error message creation for failed candidates
+
+          // TODO: preserve information in context.reporter.errors
 
           // Pass the errors to `DivergentImplicitRecovery` so that it can note
           // the first `DivergentImplicitTypeError` that is being propagated
